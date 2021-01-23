@@ -1,12 +1,12 @@
-var express    = require('express');
-var serveIndex = require('serve-index');
-var cors = require('cors');
-var fetch = require('node-fetch');
-var util = require('util');
-var mysql = require("mysql");
-var bodyParser = require("body-parser");
-var cookieParser = require ('cookie-parser');
-var crypto = require('crypto');
+var express      = require('express');
+var serveIndex   = require('serve-index');
+var cors         = require('cors');
+var fetch        = require('node-fetch');
+var util         = require('util');
+var mysql        = require("mysql");
+var bodyParser   = require("body-parser");
+var cookieParser = require('cookie-parser');
+var crypto       = require('crypto');
 
 var app = express();
 
@@ -107,7 +107,7 @@ app.post('/callLogin', cors(copts), function (req, res){
             }
             if(results.length === 1){
                 console.log("Authenticated user " + results[0].username);
-                setNewSession(res);
+                setNewSession(res, results[0].username);
                 res.status(200).send('login successful');
             } else {
                 res.status(401).send('login failed');
@@ -129,14 +129,26 @@ function removeItemAll(arr, value) {
     return arr;
 }
 
-function logIP(req, loggedIn){
+function getUserFromCookie(session){
+    var i = 0;
+    while(i < sessions.length){
+        if(sessions[i].split("=====")[0] === session){
+            return sessions[i].split("=====")[1];
+        } else {
+            ++i;
+        }
+    }
+}
+
+function logIP(req){
     var ip = req.ip;
     var path = req.originalUrl;
+    var user = getUserFromCookie();
     console.log(ip);
     sql.getConnection(function(err, connection) {
         if(err) console.log(err);
         var timestamp = + new Date();
-        var params = [ip, path, timestamp, loggedIn];
+        var params = [ip, path, timestamp, user];
         var cmd = "INSERT INTO visits VALUES(?, ?, ?, ?);";
         connection.query(cmd, params, function(err, results, fields) {
             if(err) console.log(err);
@@ -145,16 +157,25 @@ function logIP(req, loggedIn){
     });
 }
 
-function setNewSession(res){
+function setNewSession(res, user){
     var id = crypto.randomBytes(20).toString('hex');
-    sessions.push(id);
+    sessions.push(id + "=====" + user);
     console.log("new session: " + id);
     res.cookie('session', id, { maxAge: 900000, httpOnly: true })
 }
 
 function evalCookie(req){
     var session = req.cookies['session'];
-    return sessions.includes(session);
+    var contained = false;
+    let i = 0;
+    while(i < sessions.length){
+        if(sessions[i].split("=====")[0] === session) {
+            contained = true;
+        } else {
+            ++i;
+        }
+    }
+    return contained;
 }
 
 app.listen(6969);
