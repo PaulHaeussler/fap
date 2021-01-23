@@ -130,12 +130,9 @@ function removeItemAll(arr, value) {
 }
 
 function getUserFromCookie(session){
-    var i = 0;
-    while(i < sessions.length){
+    for(let i = 0; i < sessions.length; i++){
         if(sessions[i].split("=====")[0] === session){
             return sessions[i].split("=====")[1];
-        } else {
-            ++i;
         }
     }
 }
@@ -167,12 +164,9 @@ function setNewSession(res, user){
 function evalCookie(req){
     var session = req.cookies['session'];
     var contained = false;
-    let i = 0;
-    while(i < sessions.length){
+    for(let i = 0; i < sessions.length; i++){
         if(sessions[i].split("=====")[0] === session) {
             contained = true;
-        } else {
-            ++i;
         }
     }
     return contained;
