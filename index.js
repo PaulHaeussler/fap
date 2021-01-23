@@ -89,8 +89,53 @@ app.post('/callRegister', cors(copts), function(req, res){
         res.status(303).send("http://fap.bilbosjournal.com");
         return;
     }
+    var user = req.body.username;
+    var hash = req.body.pwhash;
+    var mail = req.body.email;
+    var timestamp = + new Date();
 
+    if(user.length > 255){
+        res.status(400).send("username too long");
+        return;
+    }
+    if(hash.length > 64){
+        res.status(400).send("pwhash too long");
+        return;
+    }
+    if(mail.length > 255){
+        res.status(400).send("email too long");
+        return;
+    }
+    if(user.length > 255){
+        res.status(400).send("username too long");
+        return;
+    }
 
+    sql.getConnection(function (err, connection) {
+        if(err) console.log(err);
+
+        var cmd = "SELECT * FROM users WHERE username = ?;";
+        connection.query(cmd, user, function (err, results, fields) {
+            if (err) {
+                console.log(cmd)
+                console.log(err)
+            }
+            if(results.length === 1){
+                res.status(401).send('already in use');
+            } else {
+                cmd = "INSERT INTO users VALUES(?, ?, ?, ?)";
+                var params = [user, hash, mail, timestamp];
+                connection.query(cmd, params, function (err, results, fields){
+                   if(err) {
+                       console.log(cmd)
+                       console.log(err)
+                   }
+                });
+                res.status(200).send("successfully registered")
+            }
+        });
+        connection.release();
+    })
 
 });
 

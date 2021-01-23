@@ -31,15 +31,64 @@
         <br>
         <button id="register"
                 type="submit"
-                onclick="register()">
+                onclick="validate()">
             Register
         </button>
+        <label id="error" class="errormsg"></label>
     </p>
 </div>
 
 <script>
-    function register(){
-
+    function validate(){
+        var username = document.getElementById("username").value;
+        var pw = document.getElementById("password").value;
+        var pwr = document.getElementById("rpassword").value;
+        var mail = document.getElementById("email").value;
+        var err = document.getElementById("error");
+        if(username === ""){
+            err.innerText = "Please specify username";
+        } else if(pw === "") {
+            err.innerText = "Please specify a password";
+        } else if(pwr === "") {
+            err.innerText = "Please type your password again";
+        } else if(mail === ""){
+            err.innerText = "Please provide an e-mail address";
+        } else if(pw !== pwr) {
+            err.innerText = "Passwords dont match";
+        } else if(!validateEmail(mail)){
+            err.innerText = "This is not a valid e-mail address";
+        } else {
+            register(username, pw, mail);
+        }
+    }
+    function register(username, pw, mail){
+        var hash = sha256(pw);
+        fetch("http://fap.bilbosjournal.com/callRegister", {
+            method: "POST",
+            body: JSON.stringify({"username": username, "pwhash": hash, "email": mail}),
+            headers: {
+                "Content-Type": "application/json"
+            }
+        }).then(function(response) {
+            if(response.status === 401){
+                document.getElementById("error").innerText = "Username already taken"
+            } else if(response.status === 303) {
+                document.getElementById("error").innerText = "Please log out first"
+            } else if(response.status === 400) {
+                document.getElementById("error").innerText = "Invalid name/password/email chosen"
+            } else if(response.status !== 200) {
+                document.getElementById("error").innerText = "Server Error"
+            } else {
+                document.getElementById("error").innerText = "Successfully registered, please log in!"
+                document.getElementById("register").setAttribute("onclick", "redirect()");
+                document.getElementById("register").innerText = "Go To Login"
+            }
+        }).catch(function (error) {
+            console.log(error);
+        })
+    }
+    function redirect(){
+        window.location.href = "http://fap.bilbosjournal.com/login"
     }
 </script>
 </body>

@@ -31,7 +31,7 @@
     <script>
         function validate(){
             var username = document.getElementById("username").value;
-            var pw = document.getElementById("username").value;
+            var pw = document.getElementById("password").value;
             if(username === ""){
                 document.getElementById("error").innerText = "Please specify username"
             } else if(pw === ""){
@@ -49,7 +49,6 @@
                     "Content-Type": "application/json"
                 }
             }).then(function(response) {
-                console.log(response.text);
                 if(response.status !== 200){
                     document.getElementById("error").innerText = "Login failed!"
                 } else {
