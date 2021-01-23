@@ -60,7 +60,7 @@ app.get('/register', cors(copts), function(req, res){
 });
 
 
-app.get('/callLogin', cors(copts), function (req, res){
+app.post('/callLogin', cors(copts), function (req, res){
 
     console.log(req.body)
 
