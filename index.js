@@ -47,11 +47,19 @@ app.get('/', cors(copts), function(req, res){
 });
 app.get('/done', cors(copts), function(req, res){
     logIP(req, evalCookie(req));
-    res.sendFile("html/private/entryform.html", {root: __dirname});
+    if(evalCookie(req)){
+        res.sendFile("html/private/entryform.html", {root: __dirname});
+    } else {
+        res.status(403).send("Please log in");
+    }
 });
 app.get('/overview', cors(copts), function(req, res){
     logIP(req, evalCookie(req));
-    res.sendFile("html/private/overview.html", {root: __dirname});
+    if(evalCookie(req)){
+        res.sendFile("html/private/overview.html", {root: __dirname});
+    } else {
+        res.status(403).send("Please log in");
+    }
 });
 app.get('/login', cors(copts), function(req, res){
     logIP(req, evalCookie(req));
