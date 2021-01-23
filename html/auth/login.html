@@ -19,15 +19,43 @@
             <br>
             <button id="login"
                     type="submit"
-                    onclick="login()">
+                    onclick="validate()">
                 Login
             </button>
+            <label id="error" class="errormsg"></label>
         </p>
     </div>
 
     <script>
+        function validate(){
+            var username = document.getElementById("username").value;
+            var pw = document.getElementById("username").value;
+            if(username === ""){
+                document.getElementById("error").innerText = "Please specify username"
+            } else if(pw === ""){
+                document.getElementById("error").innerText = "No password provided"
+            } else {
+                login();
+            }
+        }
         function login(){
-
+            var hash = sha256(document.getElementById("password").value);
+            fetch("http://fap.bilbosjournal.com/callLogin", {
+                method: "POST",
+                body: JSON.stringify({"username": document.getElementById("username").value, "pwhash": hash}),
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            }).then(function(response) {
+                console.log(response.text);
+                if(response.status !== 200){
+                    document.getElementById("error").innerText = "Login failed!"
+                } else {
+                    window.location.href = "http://fap.bilbosjournal.com/overview"
+                }
+            }).catch(function (error) {
+                console.log(error);
+            })
         }
     </script>
 </body>

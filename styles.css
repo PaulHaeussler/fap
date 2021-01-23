@@ -5,6 +5,11 @@ th {
     background: #dee2e0;
 }
 
+.errormsg {
+    color: #802626;
+    font-family: arial, sans-serif;
+    font-weight: bold;
+}
 
 .center {
     margin: auto;
