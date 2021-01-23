@@ -7,7 +7,7 @@ var mysql = require("mysql");
 var bodyParser = require("body-parser")
 var session = require('express-session')
 
-var app = express()
+var app = express();
 
 var copts = {
     origin: function (origin, callback) {
