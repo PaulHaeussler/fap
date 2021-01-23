@@ -31,7 +31,7 @@ var sql = mysql.createPool({
 
 
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.text());
+app.use(bodyParser.json());
 app.use(cookieParser())
 
 app.use('/', express.static(__dirname));
@@ -59,6 +59,27 @@ app.get('/register', cors(copts), function(req, res){
     res.sendFile("html/auth/register.html", {root: __dirname});
 });
 
+app.get('/signout', cors(copts), function(req, res){
+    var cookie = req.cookie['session'];
+    if(cookie === undefined){
+        res.status(400).send('not signed in');
+    } else {
+        removeItemAll(sessions, cookie);
+        res.status(200).send('successfully signed out');
+    }
+});
+
+app.post('/callRegister', cors(copts), function(req, res){
+    logIP(req, false);
+
+    if(evalCookie(req)){
+        res.status(303).send("http://fap.bilbosjournal.com");
+        return;
+    }
+
+
+
+});
 
 app.post('/callLogin', cors(copts), function (req, res){
     logIP(req, false);
@@ -82,7 +103,6 @@ app.post('/callLogin', cors(copts), function (req, res){
                 console.log(cmd)
                 console.log(err)
             }
-            console.log(results.length)
             if(results.length === 1){
                 console.log("Authenticated user " + results.username);
                 setNewSession(res);
@@ -95,6 +115,17 @@ app.post('/callLogin', cors(copts), function (req, res){
     })
 });
 
+function removeItemAll(arr, value) {
+    var i = 0;
+    while (i < arr.length) {
+        if (arr[i] === value) {
+            arr.splice(i, 1);
+        } else {
+            ++i;
+        }
+    }
+    return arr;
+}
 
 function logIP(req, loggedIn){
     var ip = req.ip;
