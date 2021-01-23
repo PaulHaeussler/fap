@@ -61,7 +61,9 @@ app.get('/register', cors(copts), function(req, res){
 });
 
 app.get('/signout', cors(copts), function(req, res){
-    if(req.cookie !== undefined) var cookie = req.cookie['session'];
+    var cookie = undefined;
+    console.log(req.cookie);
+    if(req.cookie !== undefined) cookie = req.cookie['session'];
     if(cookie === undefined){
         res.status(400).send('not signed in');
     } else {
@@ -84,7 +86,6 @@ app.post('/callRegister', cors(copts), function(req, res){
 
 app.post('/callLogin', cors(copts), function (req, res){
     logIP(req, false);
-    console.log(req.body)
     if(evalCookie(req)){
         res.status(303).send("http://fap.bilbosjournal.com");
         return;
@@ -96,16 +97,14 @@ app.post('/callLogin', cors(copts), function (req, res){
         var user = req.body.username;
         var hash = req.body.pwhash;
         var cmd = "SELECT * FROM users WHERE username = ? AND pwhash = ?;";
-        console.log(cmd);
         var params = [user, hash];
-        console.log(params);
         connection.query(cmd, params, function (err, results, fields) {
             if (err) {
                 console.log(cmd)
                 console.log(err)
             }
             if(results.length === 1){
-                console.log("Authenticated user " + results.username);
+                console.log("Authenticated user " + results[0].username);
                 setNewSession(res);
                 res.status(200).send('login successful');
             } else {
