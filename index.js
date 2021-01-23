@@ -75,8 +75,8 @@ app.post('/callLogin', cors(copts), function (req, res){
         var hash = req.body.pwhash;
         var cmd = "SELECT * FROM users WHERE username = ? AND pwhash = ?;";
         console.log(cmd);
-
-        connection.query(cmd, user, hash, function (err, results, fields) {
+        var params = [user, hash];
+        connection.query(cmd, params, function (err, results, fields) {
             if (err) {
                 console.log(cmd)
                 console.log(err)
@@ -102,8 +102,9 @@ function logIP(req, loggedIn){
     sql.getConnection(function(err, connection) {
         if(err) console.log(err);
         var timestamp = + new Date();
+        var params = [ip, path, timestamp, loggedIn];
         var cmd = "INSERT INTO visits VALUES(?, ?, ?, ?);";
-        connection.query(cmd, ip, path, timestamp, loggedIn, function(err, results, fields) {
+        connection.query(cmd, params, function(err, results, fields) {
             if(err) console.log(err);
         });
         connection.release();
