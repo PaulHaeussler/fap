@@ -62,11 +62,12 @@ app.get('/register', cors(copts), function(req, res){
 
 app.get('/signout', cors(copts), function(req, res){
     var cookie = undefined;
-    console.log(req.cookie);
-    if(req.cookie !== undefined) cookie = req.cookie['session'];
+    if(req.cookies !== undefined) cookie = req.cookies['session'];
     if(cookie === undefined){
+        logIP(req, false);
         res.status(400).send('not signed in');
     } else {
+        logIP(req, true);
         removeItemAll(sessions, cookie);
         res.status(200).send('successfully signed out');
     }
