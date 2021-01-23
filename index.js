@@ -34,6 +34,7 @@ app.use('/', express.static(__dirname));
 
 app.get('/', cors(copts), function(req, res){
     logIP(req.ip);
+    //validate
     res.sendFile("public/index.html");
 });
 app.get('/done', cors(copts), function(req, res){
