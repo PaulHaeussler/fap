@@ -81,7 +81,7 @@ app.post('/callLogin', cors(copts), function (req, res){
                 console.log(cmd)
                 console.log(err)
             }
-            console.log(results[0])
+            console.log(results.length)
             if(results.length === 1){
                 console.log("Authenticated user " + results.username);
                 setNewSession(res);
