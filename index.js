@@ -65,7 +65,7 @@ app.get('/register', cors(copts), function(req, res){
 app.get('/signout', cors(copts), function(req, res){
     if(evalCookie(req)){
         logIP(req, true);
-        removeItemAll(sessions, req.cookies['session']);
+        removeItemAll(sessions, req.cookies['session'] + "=====" + getUserFromCookie(req.cookies['session']));
         console.log("end session: " + req.cookies['session']);
         res.status(200).send('successfully signed out');
     } else {
