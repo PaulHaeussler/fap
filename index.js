@@ -6,6 +6,7 @@ var util = require('util');
 var mysql = require("mysql");
 var bodyParser = require("body-parser");
 var cookieParser = require ('cookie-parser');
+var crypto = require('crypto');
 
 var app = express();
 
