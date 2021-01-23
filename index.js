@@ -140,7 +140,7 @@ function getUserFromCookie(session){
 function logIP(req){
     var ip = req.ip;
     var path = req.originalUrl;
-    var user = getUserFromCookie();
+    var user = getUserFromCookie(req.cookies['session']);
     console.log(ip);
     sql.getConnection(function(err, connection) {
         if(err) console.log(err);
