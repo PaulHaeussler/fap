@@ -38,7 +38,7 @@ app.use(cookieParser())
 app.use('/', express.static(__dirname));
 
 app.get('/', cors(copts), function(req, res){
-    logIP(req.ip);
+    logIP(req.ip, evalCookie(req));
     if(evalCookie(req)){
         res.sendFile("html/private/start.html", {root: __dirname});
     } else {
@@ -46,19 +46,19 @@ app.get('/', cors(copts), function(req, res){
     }
 });
 app.get('/done', cors(copts), function(req, res){
-    logIP(req.ip);
+    logIP(req.ip, evalCookie(req));
     res.sendFile("html/private/entryform.html", {root: __dirname});
 });
 app.get('/overview', cors(copts), function(req, res){
-    logIP(req.ip);
+    logIP(req.ip, evalCookie(req));
     res.sendFile("html/private/overview.html", {root: __dirname});
 });
 app.get('/login', cors(copts), function(req, res){
-    logIP(req.ip);
+    logIP(req.ip, evalCookie(req));
     res.sendFile("html/auth/login.html", {root: __dirname});
 });
 app.get('/register', cors(copts), function(req, res){
-    logIP(req.ip);
+    logIP(req.ip, evalCookie(req));
     res.sendFile("html/auth/register.html", {root: __dirname});
 });
 
