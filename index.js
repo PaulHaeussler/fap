@@ -36,6 +36,7 @@ app.get('/', cors(copts), function(req, res){
     logIP(req.ip);
     //validate
     res.sendFile("public/index.html");
+    //res.sendFile("public/start.html");
 });
 app.get('/done', cors(copts), function(req, res){
     logIP(req.ip);
