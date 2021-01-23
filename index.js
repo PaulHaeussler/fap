@@ -39,9 +39,11 @@ app.use('/', express.static(__dirname));
 
 app.get('/', cors(copts), function(req, res){
     logIP(req.ip);
-    //validate
-    res.sendFile("html/public/index.html", {root: __dirname});
-    //res.sendFile("public/start.html", {root: __dirname});
+    if(evalCookie(req)){
+        res.sendFile("html/private/start.html", {root: __dirname});
+    } else {
+        res.sendFile("html/public/index.html", {root: __dirname});
+    }
 });
 app.get('/done', cors(copts), function(req, res){
     logIP(req.ip);

@@ -16,6 +16,9 @@
 <script>
     function start(){
         document.getElementById("startstop").innerText = "Done";
+        document.getElementById("startstop").setAttribute("onclick", "done()");
+    }
+    function done(){
         window.location.href = "done";
     }
 </script>
