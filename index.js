@@ -76,6 +76,7 @@ app.post('/callLogin', cors(copts), function (req, res){
         var cmd = "SELECT * FROM users WHERE username = ? AND pwhash = ?;";
         console.log(cmd);
         var params = [user, hash];
+        console.log(params);
         connection.query(cmd, params, function (err, results, fields) {
             if (err) {
                 console.log(cmd)
