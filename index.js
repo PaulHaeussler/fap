@@ -61,7 +61,7 @@ app.get('/register', cors(copts), function(req, res){
 });
 
 app.get('/signout', cors(copts), function(req, res){
-    var cookie = req.cookie['session'];
+    if(req.cookie !== undefined) var cookie = req.cookie['session'];
     if(cookie === undefined){
         res.status(400).send('not signed in');
     } else {
@@ -147,6 +147,7 @@ function logIP(req, loggedIn){
 function setNewSession(res){
     var id = crypto.randomBytes(20).toString('hex');
     sessions.push(id);
+    console.log("new session: " + id);
     res.cookie('session', id, { maxAge: 900000, httpOnly: true })
 }
 
