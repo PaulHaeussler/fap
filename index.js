@@ -61,15 +61,13 @@ app.get('/register', cors(copts), function(req, res){
 });
 
 app.get('/signout', cors(copts), function(req, res){
-    var cookie = undefined;
-    if(req.cookies !== undefined) cookie = req.cookies['session'];
-    if(cookie === undefined){
-        logIP(req, false);
-        res.status(400).send('not signed in');
-    } else {
+    if(evalCookie(req)){
         logIP(req, true);
         removeItemAll(sessions, cookie);
         res.status(200).send('successfully signed out');
+    } else {
+        logIP(req, false);
+        res.status(400).send('not signed in');
     }
 });
 
