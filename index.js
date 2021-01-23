@@ -1,13 +1,15 @@
-var express    = require('express')
-var serveIndex = require('serve-index')
-var cors = require('cors')
+var express    = require('express');
+var serveIndex = require('serve-index');
+var cors = require('cors');
 var fetch = require('node-fetch');
 var util = require('util');
 var mysql = require("mysql");
-var bodyParser = require("body-parser")
-var session = require('express-session')
+var bodyParser = require("body-parser");
+var cookieParser = require ('cookie-parser');
 
 var app = express();
+
+var sessions = [];
 
 var copts = {
     origin: function (origin, callback) {
@@ -27,8 +29,10 @@ var sql = mysql.createPool({
     charset: 'utf8mb4'
 });
 
+
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.text());
+app.use(cookieParser())
 
 app.use('/', express.static(__dirname));
 
@@ -55,10 +59,61 @@ app.get('/register', cors(copts), function(req, res){
     res.sendFile("html/auth/register.html", {root: __dirname});
 });
 
-function logIP(ip){
+
+app.get('/callLogin', cors(copts), function (req, res){
+
+    console.log(req.body)
+
+    sql.getConnection(function (err, connection) {
+        if(err) console.log(err);
+        var user = req.body.username;
+        var hash = req.body.pwhash;
+        var cmd = "SELECT * FROM users WHERE username = ? AND pwhash = ?;";
+
+
+        connection.query(cmd, user, hash, function (err, results, fields) {
+            if (err) {
+                console.log(cmd)
+                console.log(err)
+            }
+
+            if(results.length === 1){
+                console.log("Authenticated user " + results.username);
+                setNewSession(res);
+                res.status(200).send('login successful');
+            } else {
+                res.status(401).send('login failed');
+            }
+        });
+        connection.release();
+    })
+});
+
+
+function logIP(req, loggedIn){
+    var ip = req.ip;
+    var path = req.originalUrl;
     console.log(ip);
+    sql.getConnection(function(err, connection) {
+        if(err) console.log(err);
+        var timestamp = + new Date();
+        var cmd = "INSERT INTO visits VALUES(?, ?, ?, ?);";
+        connection.query(cmd, ip, path, timestamp, loggedIn, function(err, results, fields) {
+            if(err) console.log(err);
+        });
+        connection.release();
+    });
+}
 
+function setNewSession(res){
+    var id = crypto.randomBytes(20).toString('hex');
+    sessions.push(id);
+    res.cookie('session', id, { maxAge: 900000, httpOnly: true })
+}
 
+function evalCookie(req){
+    var session = req.cookies['session'];
+    return sessions.includes(session);
 }
 
 app.listen(6969);
