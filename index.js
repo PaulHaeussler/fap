@@ -61,22 +61,27 @@ app.get('/register', cors(copts), function(req, res){
 
 
 app.post('/callLogin', cors(copts), function (req, res){
-
+    logIP(req, false);
     console.log(req.body)
+    if(evalCookie(req)){
+        res.status(303).send("http://fap.bilbosjournal.com");
+        return;
+    }
+
 
     sql.getConnection(function (err, connection) {
         if(err) console.log(err);
         var user = req.body.username;
         var hash = req.body.pwhash;
         var cmd = "SELECT * FROM users WHERE username = ? AND pwhash = ?;";
-
+        console.log(cmd);
 
         connection.query(cmd, user, hash, function (err, results, fields) {
             if (err) {
                 console.log(cmd)
                 console.log(err)
             }
-
+            console.log(results[0])
             if(results.length === 1){
                 console.log("Authenticated user " + results.username);
                 setNewSession(res);
