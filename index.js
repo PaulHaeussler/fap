@@ -35,24 +35,24 @@ app.use('/', express.static(__dirname));
 app.get('/', cors(copts), function(req, res){
     logIP(req.ip);
     //validate
-    res.sendFile("public/index.html", {root: __dirname});
+    res.sendFile("html/public/index.html", {root: __dirname});
     //res.sendFile("public/start.html", {root: __dirname});
 });
 app.get('/done', cors(copts), function(req, res){
     logIP(req.ip);
-    res.sendFile("private/start.html", {root: __dirname});
+    res.sendFile("html/private/start.html", {root: __dirname});
 });
 app.get('/overview', cors(copts), function(req, res){
     logIP(req.ip);
-    res.sendFile("private/overview.html", {root: __dirname});
+    res.sendFile("html/private/overview.html", {root: __dirname});
 });
 app.get('/login', cors(copts), function(req, res){
     logIP(req.ip);
-    res.sendFile("auth/login.html", {root: __dirname});
+    res.sendFile("html/auth/login.html", {root: __dirname});
 });
 app.get('/register', cors(copts), function(req, res){
     logIP(req.ip);
-    res.sendFile("auth/register.html", {root: __dirname});
+    res.sendFile("html/auth/register.html", {root: __dirname});
 });
 
 function logIP(ip){
