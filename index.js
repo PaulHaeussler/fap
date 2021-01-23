@@ -40,7 +40,7 @@ app.get('/', cors(copts), function(req, res){
 });
 app.get('/done', cors(copts), function(req, res){
     logIP(req.ip);
-    res.sendFile("html/private/start.html", {root: __dirname});
+    res.sendFile("html/private/entryform.html", {root: __dirname});
 });
 app.get('/overview', cors(copts), function(req, res){
     logIP(req.ip);
