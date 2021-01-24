@@ -31,7 +31,7 @@
         startTime = Date.now() - elapsedTime;
         timerInterval = setInterval(function printTime() {
             elapsedTime = Date.now() - startTime;
-            document.getElementById("timer").innerText = (timeToString(elapsedTime));
+            document.getElementById("display").innerText = (timeToString(elapsedTime));
         }, 10);
 
         fetch("http://fap.bilbosjournal.com/postStart").then(

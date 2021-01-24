@@ -12,6 +12,7 @@ var app = express();
 
 var sessions = [];
 var ongoingFaps = [];
+var endedFaps = [];
 
 var copts = {
     origin: function (origin, callback) {
@@ -115,6 +116,26 @@ app.get('/hasOngoing', cors(copts), function (req, res){
         res.status(200).send(JSON.stringify({"startTime": time}));
     }
 });
+
+app.get('/endFap', cors(copts), function (req, res){
+    if(!evalCookie(req)){
+        res.status(401).send('not signed in')
+        return;
+    }
+    let user = getUserFromCookie(req.cookies['session']);
+    let time = getStartTime(user);
+    if(time === undefined) {
+        res.status(400).send('No ongoing session');
+    } else {
+        for(let i = 0; i < ongoingFaps.length; i++){
+            if(ongoingFaps[i].split("=====")[0] === user){
+                endedFaps.push(ongoingFaps[i]);
+                removeItemAll(ongoingFaps, ongoingFaps[i]);
+            }
+        }
+        res.status(200).send('Ended fap');
+    }
+})
 
 app.post('/callRegister', cors(copts), function(req, res){
     logIP(req, false);
