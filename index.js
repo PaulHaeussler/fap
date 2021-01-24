@@ -11,6 +11,7 @@ var crypto       = require('crypto');
 var app = express();
 
 var sessions = [];
+var ongoingFaps = [];
 
 var copts = {
     origin: function (origin, callback) {
@@ -80,6 +81,15 @@ app.get('/signout', cors(copts), function(req, res){
         logIP(req, false);
         res.status(400).send('not signed in');
     }
+});
+
+app.get('/postStart', cors(copts), function (req, res){
+    if(!evalCookie(req)){
+        res.status(403).send('not signed in')
+        return;
+    }
+    let user = getUserFromCookie(req.cookies['session']);
+    setNewFap(user);
 });
 
 app.post('/callRegister', cors(copts), function(req, res){
@@ -182,6 +192,14 @@ function removeItemAll(arr, value) {
     return arr;
 }
 
+function getStartTime(user){
+    for(let i = 0; i < ongoingFaps.length; i++){
+        if(ongoingFaps[i].split("=====")[0] === user){
+            return ongoingFaps[i].split("=====")[1];
+        }
+    }
+}
+
 function getUserFromCookie(session){
     for(let i = 0; i < sessions.length; i++){
         if(sessions[i].split("=====")[0] === session){
@@ -205,6 +223,12 @@ function logIP(req){
         });
         connection.release();
     });
+}
+
+function setNewFap(user){
+    var timestamp = + new Date();
+    ongoingFaps.push(user + "=====" + timestamp);
+    console.log("new fap: " + user);
 }
 
 function setNewSession(res, user){

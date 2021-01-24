@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Ongoing</title>
+    <link rel="stylesheet" href="styles.css">
+    <script type="text/javascript" src="util.js"></script>
+</head>
+<body>
+    <div class="center">
+        <h3>You still have a fap in progress</h3>
+        <button id="stop"
+                type="submit"
+                onclick="done()">
+            End current fap
+        </button>
+        <div class="circle">
+            <span class="time" id="display">00:00:00</span>
+        </div>
+    </div>
+    <button onclick="overview()">See my Faps</button>
+    <button onclick="signout()">Sign out</button>
+
+<script>
+    function overview(){
+        window.location.href = "overview";
+    }
+    function done(){
+        window.location.href = "done";
+    }
+
+
+    let startTime;
+    let elapsedTime = 0;
+    let timerInterval;
+
+    fetch("http://fap.bilbosjournal.com/hasOngoing").then(
+        function (response) {
+            console.log(response)
+            return response.json();
+        }).then(function (json) {
+            startTime = json.startTime;
+    }).catch(function (error) {
+        console.log(error);
+    })
+
+    startTime = Date.now() - elapsedTime;
+    timerInterval = setInterval(function printTime() {
+        elapsedTime = Date.now() - startTime;
+        document.getElementById("timer").innerText = (timeToString(elapsedTime));
+    }, 10);
+</script>
+</body>
+</html>

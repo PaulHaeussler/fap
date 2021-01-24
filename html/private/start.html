@@ -13,16 +13,41 @@
             onclick="start()">
         Start fapping
     </button>
+    <div class="circle">
+        <span class="time" id="display">00:00:00</span>
+    </div>
 </div>
+<button onclick="overview()">See my Faps</button>
 <button onclick="signout()">Sign out</button>
 
 <script>
+    let startTime;
+    let elapsedTime = 0;
+    let timerInterval;
+
     function start(){
         document.getElementById("startstop").innerText = "Done";
         document.getElementById("startstop").setAttribute("onclick", "done()");
+        startTime = Date.now() - elapsedTime;
+        timerInterval = setInterval(function printTime() {
+            elapsedTime = Date.now() - startTime;
+            document.getElementById("timer").innerText = (timeToString(elapsedTime));
+        }, 10);
+
+        fetch("http://fap.bilbosjournal.com/postStart").then(
+            function (response) {
+                console.log(response)
+        }).catch(function (error) {
+            console.log(error);
+        })
     }
+
+
     function done(){
         window.location.href = "done";
+    }
+    function overview(){
+        window.location.href = "overview";
     }
 </script>
 </body>
