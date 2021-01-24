@@ -42,6 +42,19 @@
         })
     }
 
+    function hasOngoing(){
+        fetch("http://fap.bilbosjournal.com/hasOngoing").then(
+            function (response) {
+                console.log(response)
+                return response.json();
+            }).then(function (json) {
+            if(json.startTime !== "none"){
+                window.location.href = "ongoing";
+            }
+        }).catch(function (error) {
+            console.log(error);
+        })
+    }
 
     function done(){
         window.location.href = "done";
@@ -49,6 +62,8 @@
     function overview(){
         window.location.href = "overview";
     }
+
+    hasOngoing();
 </script>
 </body>
 </html>

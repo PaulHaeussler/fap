@@ -71,6 +71,15 @@ app.get('/register', cors(copts), function(req, res){
     res.sendFile("html/auth/register.html", {root: __dirname});
 });
 
+app.get('/ongoing', cors(copts), function(req, res){
+    logIP(req, evalCookie(req));
+    if(evalCookie(req)){
+        res.sendFile("html/private/ongoing.html", {root: __dirname});
+    } else {
+        res.status(400).send('not signed in');
+    }
+});
+
 app.get('/signout', cors(copts), function(req, res){
     if(evalCookie(req)){
         logIP(req, true);
@@ -90,6 +99,21 @@ app.get('/postStart', cors(copts), function (req, res){
     }
     let user = getUserFromCookie(req.cookies['session']);
     setNewFap(user);
+});
+
+app.get('/hasOngoing', cors(copts), function (req, res){
+    if(!evalCookie(req)){
+        res.status(401).send('not signed in')
+        return;
+    }
+
+    let user = getUserFromCookie(req.cookies['session']);
+    let time = getStartTime(user);
+    if(time === undefined) {
+        res.status(200).send(JSON.stringify({"startTime": "none"}))
+    } else {
+        res.status(200).send(JSON.stringify({"startTime": time}));
+    }
 });
 
 app.post('/callRegister', cors(copts), function(req, res){
