@@ -11,7 +11,7 @@
         <h3>You still have a fap in progress</h3>
         <button id="stop"
                 type="submit"
-                onclick="done()">
+                onclick="endFap()">
             End current fap
         </button>
         <div class="circle">
@@ -25,11 +25,7 @@
     function overview(){
         window.location.href = "overview";
     }
-    function done(){
-        endFap().then(() => {
-            window.location.href = "done";
-        });
-    }
+
 
     function endFap(){
         fetch("http://fap.bilbosjournal.com/endFap").then(
@@ -37,11 +33,12 @@
                 console.log(response)
                 if(response.status === 401) {
                     window.location.href = "/";
+                } else {
+                    window.location.href = "done";
                 }
             }).catch(function (error) {
             console.log(error);
         })
-        return new Promise();
     }
 
 

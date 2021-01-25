@@ -27,7 +27,7 @@
 
     function start(){
         document.getElementById("startstop").innerText = "Done";
-        document.getElementById("startstop").setAttribute("onclick", "done()");
+        document.getElementById("startstop").setAttribute("onclick", "endFap()");
         startTime = Date.now() - elapsedTime;
         timerInterval = setInterval(function printTime() {
             elapsedTime = Date.now() - startTime;
@@ -62,18 +62,15 @@
                 console.log(response)
                 if(response.status === 401) {
                     window.location.href = "/";
+                } else {
+                    window.location.href = "done";
                 }
             }).catch(function (error) {
             console.log(error);
         })
-        return new Promise();
     }
 
-    function done(){
-        endFap().then(() => {
-            window.location.href = "done";
-        });
-    }
+
     function overview(){
         window.location.href = "overview";
     }
