@@ -66,11 +66,11 @@
             }).catch(function (error) {
             console.log(error);
         })
-        return new Promise(null);
+        return new Promise();
     }
 
     function done(){
-        endFap().then(function(x){
+        endFap().then(() => {
             window.location.href = "done";
         });
     }

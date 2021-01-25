@@ -129,7 +129,7 @@ app.get('/endFap', cors(copts), function (req, res){
     } else {
         for(let i = 0; i < ongoingFaps.length; i++){
             if(ongoingFaps[i].split("=====")[0] === user){
-                endedFaps.push(ongoingFaps[i] + "=====" + new Date());
+                endedFaps.push(ongoingFaps[i] + "=====" + new Date().valueOf());
                 console.log(endedFaps);
                 removeItemAll(ongoingFaps, ongoingFaps[i]);
             }
@@ -192,7 +192,6 @@ app.post('/callRegister', cors(copts), function(req, res){
         });
         connection.release();
     })
-
 });
 
 app.post('/callLogin', cors(copts), function (req, res){
