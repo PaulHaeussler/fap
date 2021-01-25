@@ -53,6 +53,9 @@
                         Done
                     </button>
                 </p>
+                <p>
+                    <label id="error" class="errormsg"></label>
+                </p>
             </fieldset>
         </form>
     </div>
@@ -63,6 +66,23 @@
     function validate(){
 
     }
+
+
+
+    function getFap(){
+        fetch("http://fap.bilbosjournal.com/endedFap").then(
+            function (response) {
+                console.log(response)
+                return response.json();
+            }).then(function (json) {
+            let startTime = json.startTime;
+            let totalTime = json.totalTime;
+        }).catch(function (error) {
+            console.log(error);
+        })
+    }
+
+    getFap()
 </script>
 </body>
 </html>

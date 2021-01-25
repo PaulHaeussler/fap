@@ -56,8 +56,23 @@
         })
     }
 
+    function endFap(){
+        fetch("http://fap.bilbosjournal.com/endFap").then(
+            function (response) {
+                console.log(response)
+                if(response.status === 401) {
+                    window.location.href = "/";
+                }
+            }).catch(function (error) {
+            console.log(error);
+        })
+        return new Promise(null);
+    }
+
     function done(){
-        window.location.href = "done";
+        endFap().then(function(x){
+            window.location.href = "done";
+        });
     }
     function overview(){
         window.location.href = "overview";

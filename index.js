@@ -129,7 +129,8 @@ app.get('/endFap', cors(copts), function (req, res){
     } else {
         for(let i = 0; i < ongoingFaps.length; i++){
             if(ongoingFaps[i].split("=====")[0] === user){
-                endedFaps.push(ongoingFaps[i]);
+                endedFaps.push(ongoingFaps[i] + "=====" + new Date());
+                console.log(endedFaps);
                 removeItemAll(ongoingFaps, ongoingFaps[i]);
             }
         }
