@@ -118,9 +118,6 @@
         var toys = document.getElementById("toys");
         var toyname = document.getElementById("toyname");
 
-        if(genre === undefined) genre = " ";
-        if(content === undefined) content = " ";
-        if(toyname === undefined) toyname = " ";
 
         fetch("http://fap.bilbosjournal.com/submitFap", {
             method: "POST",
@@ -141,6 +138,7 @@
             home();
         }).catch(function (error) {
             console.log(error);
+            document.getElementById("error").innerText = "There was a server error";
         })
     }
 
