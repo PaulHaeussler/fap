@@ -118,6 +118,10 @@
         var toys = document.getElementById("toys");
         var toyname = document.getElementById("toyname");
 
+        if(genre === undefined) genre = " ";
+        if(content === undefined) content = " ";
+        if(toyname === undefined) toyname = " ";
+
         fetch("http://fap.bilbosjournal.com/submitFap", {
             method: "POST",
             body: JSON.stringify({"type": type.options[type.selectedIndex].text, "contra": contra.options[contra.selectedIndex].text, "porntype": porntype.options[porntype.selectedIndex].text, "genre": genre, "content": content, "toys": toys.options[toys.selectedIndex].text, "toyname": toyname}),
