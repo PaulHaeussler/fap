@@ -94,6 +94,7 @@ app.get('/signout', cors(copts), function(req, res){
 });
 
 app.get('/postStart', cors(copts), function (req, res){
+    logIP(req, evalCookie(req));
     if(!evalCookie(req)){
         res.status(403).send('not signed in')
         return;
@@ -103,6 +104,7 @@ app.get('/postStart', cors(copts), function (req, res){
 });
 
 app.get('/hasOngoing', cors(copts), function (req, res){
+    logIP(req, evalCookie(req));
     if(!evalCookie(req)){
         res.status(401).send('not signed in')
         return;
@@ -118,6 +120,7 @@ app.get('/hasOngoing', cors(copts), function (req, res){
 });
 
 app.get('/endFap', cors(copts), function (req, res){
+    logIP(req, evalCookie(req));
     if(!evalCookie(req)){
         res.status(401).send('not signed in')
         return;
@@ -127,6 +130,11 @@ app.get('/endFap', cors(copts), function (req, res){
     if(time === undefined) {
         res.status(400).send('No ongoing session');
     } else {
+        for(let i = 0; i < endedFaps.length; i++){
+            if(endedFaps[i].split("====="[0]) === user){
+                endedFaps.splice(i, 1);
+            }
+        }
         for(let i = 0; i < ongoingFaps.length; i++){
             if(ongoingFaps[i].split("=====")[0] === user){
                 endedFaps.push(ongoingFaps[i] + "=====" + new Date().valueOf());
@@ -136,7 +144,100 @@ app.get('/endFap', cors(copts), function (req, res){
         }
         res.status(200).send('Ended fap');
     }
-})
+});
+
+
+app.get('/endedFap', cors(copts), function (req, res) {
+    logIP(req, evalCookie(req));
+    if(!evalCookie(req)){
+        res.status(401).send('not signed in');
+        return;
+    }
+    var times = getEndedTimes(req).split("=====");
+    res.status(200).send(JSON.stringify({"startTime": times[0], "endTime": times[1]}));
+});
+
+app.post('/discardFap', cors(copts), function (req, res) {
+    logIP(req, evalCookie(req));
+    for(let i = 0; i < endedFaps.length; i++){
+        var user = endedFaps[i].split("=====")[0];
+        if(getUserFromCookie(req.cookies['session']) === user){
+            endedFaps.splice(i, 1);
+        }
+    }
+    res.status(200).send('ok');
+});
+
+app.post('/submitFap', cors(copts), function (req, res) {
+    logIP(req, evalCookie(req));
+    if(!evalCookie(req)){
+        res.status(401).send('not signed in');
+        return;
+    }
+    var user = getUserFromCookie(req.cookies['session']);
+    var startTime = 0;
+    var endTime = 0;
+
+    for(let i = 0; i < endedFaps.length; i++){
+        var tmp = endedFaps[i].split("=====");
+        if(tmp[0] === user){
+            startTime = tmp[1];
+            endTime = tmp[2];
+            endedFaps.splice(i, 1);
+        }
+    }
+
+    var type = req.body.type;
+    var contra = req.body.contra;
+    var porntype = req.body.porntype;
+    var genre = req.body.genre;
+    var content = req.body.content;
+    var toys = req.body.toys;
+    var toyname = req.body.toyname;
+
+    sql.getConnection(function (err, connection) {
+        if(err) console.log(err);
+
+        var cmd = "INSERT INTO faps(starttime, endtime, user, type, contraception, porn_type, porn_genre, content_link, toys_category, toys_name) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+        var params = [startTime, endTime, user, type, contra, porntype, genre, content, toys, toyname];
+
+        connection.query(cmd, params, function (err, results, fields) {
+            if (err) {
+                console.log(cmd)
+                console.log(err)
+            }
+        });
+        connection.release();
+    })
+
+    res.status(200).send("fap submitted successfully");
+});
+
+app.get('/fetchFaps', cors(copts), function (req, res) {
+    logIP(req, evalCookie(req));
+    if(!evalCookie(req)){
+        res.status(401).send('not signed in');
+        return;
+    }
+    var user = getUserFromCookie(req.cookies['session']);
+    sql.getConnection( function (err, connection) {
+        if(err) console.log(err);
+        var cmd = "SELECT * FROM faps WHERE user = ?;";
+        connection.query(cmd, user, function (err, results, fields) {
+            var response = "";
+            if (err) {
+                console.log(cmd)
+                console.log(err)
+            }
+
+            response = JSON.stringify(results);
+            res.set({ 'content-type': 'application/json; charset=utf-8' });
+            res.end(response);
+            console.log(response);
+        })
+
+    })
+});
 
 app.post('/callRegister', cors(copts), function(req, res){
     logIP(req, false);
@@ -237,6 +338,15 @@ function removeItemAll(arr, value) {
     return arr;
 }
 
+function getEndedTimes(req){
+    let user = getUserFromCookie(req.cookies['session']);
+    for(let i = 0; i < endedFaps.length; i++){
+        if(endedFaps[i].split("=====")[0] === user){
+            return endedFaps[i].split("=====")[1] + "=====" + endedFaps[i].split("=====")[2];
+        }
+    }
+}
+
 function getStartTime(user){
     for(let i = 0; i < ongoingFaps.length; i++){
         if(ongoingFaps[i].split("=====")[0] === user){
@@ -244,6 +354,7 @@ function getStartTime(user){
         }
     }
 }
+
 
 function getUserFromCookie(session){
     for(let i = 0; i < sessions.length; i++){

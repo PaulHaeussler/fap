@@ -15,6 +15,55 @@
 
         </table>
     </div>
+    <button onclick="home()">Home</button>
     <button onclick="signout()">Sign out</button>
+
+<script>
+    function home(){
+        window.location.href = "/";
+    }
+
+    function fetchFaps(){
+        var table = document.getElementById('faps');
+
+
+        fetch("http://fap.bilbosjournal.com/fetchFaps/").then(
+            function (response) {
+                console.log(response)
+                return response.json();
+            }).then(function (json) {
+            console.log(json)
+
+            var thead = table.createTHead();
+            var tbody = table.createTBody();
+
+
+
+            Object.keys(json[0]).forEach(function(key) {
+                var th = document.createElement('th');
+                var content = document.createTextNode(key)
+                th.appendChild(content)
+                trh.appendChild(th);
+            })
+
+            Object.keys(json).forEach(function(key) {
+                var tr = tbody.insertRow();
+                console.table('Key : ' + key + ', Value : ' + json[key])
+                Object.keys(json[key]).forEach(function(key2) {
+                    var cell = tr.insertCell();
+                    //console.log(json[key][key2])
+                    var val = json[key][key2]
+                    var content = document.createTextNode(val)
+                    cell.appendChild(content);
+                })
+            })
+
+        }).catch(function (error) {
+            console.log(error);
+        })
+    }
+
+    fetchFaps();
+</script>
 </body>
 </html>

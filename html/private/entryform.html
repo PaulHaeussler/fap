@@ -12,6 +12,12 @@
             <fieldset>
                 <legend>Fap Contents</legend>
                 <p>
+                    <label>Start time: </label><label id="start"></label>
+                </p>
+                <p>
+                    <label>Duration: </label><label id="dur"></label>
+                </p>
+                <p>
                     <label>Type</label>
                     <select id = "type">
                         <option value = "1">Masturbation</option>
@@ -49,8 +55,27 @@
                            id="content">
                 </p>
                 <p>
+                    <label>Toy used</label>
+                    <select id = "toys">
+                        <option value = "1">None</option>
+                        <option value = "2">Dildo</option>
+                        <option value = "3">Buttplug</option>
+                        <option value = "4">Anal Beads</option>
+                        <option value = "5">Vibrator</option>
+                        <option value = "6">Onahole</option>
+                        <option value = "7">Cock Ring</option>
+                        <option value = "8">Other</option>
+                    </select>
+                    <label>   What toy specifically? </label>
+                    <input type="text"
+                           id="toyname">
+                </p>
+                <p>
                     <button type="submit" onclick="validate()">
                         Done
+                    </button>
+                    <button type="submit" onclick="discard()">
+                        Discard Fap
                     </button>
                 </p>
                 <p>
@@ -64,9 +89,62 @@
 
 <script>
     function validate(){
-
+        var contra = document.getElementById("contraception");
+        var toys = document.getElementById("toys");
+        var err = document.getElementById("error");
+        var genre = document.getElementById("genre");
+        var content = document.getElementById("content");
+        var toyname = document.getElementById("toyname");
+        if(contra.value === 2){
+            err.innerText = "Bruuuuuh...";
+        }
+        if(genre.value.length > 100) {
+            err.innerText = "Genre too long";
+        } else if(content.value.length > 500) {
+            err.innerText = "Content too long";
+        } else if(toyname.value.length > 100) {
+            err.innerText = "toy specifics too long";
+        } else {
+            submitFap();
+        }
     }
 
+    function submitFap(){
+        var type = document.getElementById("type");
+        var contra = document.getElementById("contraception");
+        var porntype = document.getElementById("porntype");
+        var genre = document.getElementById("genre");
+        var content = document.getElementById("content");
+        var toys = document.getElementById("toys");
+        var toyname = document.getElementById("toyname");
+
+        fetch("http://fap.bilbosjournal.com/submitFap", {
+            method: "POST",
+            body: JSON.stringify({"type": type.options[type.selectedIndex].text, "contra": contra.options[contra.selectedIndex].text, "porntype": porntype.options[porntype.selectedIndex].text, "genre": genre, "content": content, "toys": toys.options[toys.selectedIndex].text, "toyname": toyname}),
+            headers: {
+                "Content-Type": "application/json"
+            }
+        }).then(function(response) {
+            return response.text();
+        }).then(function(text){
+            console.log(text);
+            home();
+        }).catch(function (error) {
+            console.log(error);
+        })
+    }
+
+    function discard(){
+        fetch("http://fap.bilbosjournal.com/discardFap").then(
+            function (response) {
+                console.log(response)
+                return response.text();
+            }).then(function (text) {
+                console.log(text);
+        }).catch(function (error) {
+            console.log(error);
+        })
+    }
 
 
     function getFap(){
@@ -77,6 +155,9 @@
             }).then(function (json) {
             let startTime = json.startTime;
             let totalTime = json.totalTime;
+
+            document.getElementById("start").innerText = timeConverter(startTime);
+            document.getElementById("dur").innerText = timeToString(totalTime - startTime);
         }).catch(function (error) {
             console.log(error);
         })
