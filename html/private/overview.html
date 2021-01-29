@@ -37,7 +37,7 @@
             var thead = table.createTHead();
             var tbody = table.createTBody();
 
-
+            if(Object.keys(json[1] !== undefined)) document.getElementById("nocontent").innerText = "";
 
             Object.keys(json[0]).forEach(function(key) {
                 var th = document.createElement('th');
