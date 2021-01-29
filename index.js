@@ -200,6 +200,12 @@ app.post('/submitFap', cors(copts), function (req, res) {
 
     if(!exists){
         res.status(400).send("no ended faps available");
+        return;
+    }
+
+    if(startTime === 0 || endTime === 0){
+        res.status(500).send("err");
+        return;
     }
 
     var type = req.body.type;
