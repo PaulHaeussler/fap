@@ -206,11 +206,17 @@ app.post('/submitFap', cors(copts), function (req, res) {
     var toys = req.body.toys;
     var toyname = req.body.toyname;
 
+
     sql.getConnection(function (err, connection) {
         if(err) console.log(err);
 
         var cmd = "INSERT INTO faps(starttime, endtime, user, type, contraception, porn_type, porn_genre, content_link, toys_category, toys_name) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
         var params = [startTime, endTime, user, type, contra, porntype, genre, content, toys, toyname];
+
+        for(let i = 0; i < params.length; i++){
+            if(params[i] === "") params[i] = " ";
+
+        }
 
         connection.query(cmd, params, function (err, results, fields) {
             if (err) {
