@@ -154,7 +154,11 @@ app.get('/endedFap', cors(copts), function (req, res) {
         return;
     }
     var times = getEndedTimes(req).split("=====");
-    res.status(200).send(JSON.stringify({"startTime": times[0], "endTime": times[1]}));
+    if(times[0] === "null"){
+        res.status(400).send(JSON.stringify({"startTime": 0, "endTime": 0}));
+    } else {
+        res.status(200).send(JSON.stringify({"startTime": times[0], "endTime": times[1]}));
+    }
 });
 
 app.post('/discardFap', cors(copts), function (req, res) {
@@ -214,7 +218,7 @@ app.post('/submitFap', cors(copts), function (req, res) {
         var params = [startTime, endTime, user, type, contra, porntype, genre, content, toys, toyname];
 
         for(let i = 0; i < params.length; i++){
-            if(params[i] === "") params[i] = " ";
+            if(params[i] === null) params[i] = " ";
 
         }
 
@@ -362,6 +366,7 @@ function getEndedTimes(req){
             return endedFaps[i].split("=====")[1] + "=====" + endedFaps[i].split("=====")[2];
         }
     }
+    return "null";
 }
 
 function getStartTime(user){
