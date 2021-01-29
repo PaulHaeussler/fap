@@ -156,6 +156,9 @@
             let startTime = json.startTime;
             let totalTime = json.totalTime;
 
+            console.log(startTime);
+            console.log(totalTime);
+
             document.getElementById("start").innerText = timeConverter(startTime);
             document.getElementById("dur").innerText = timeToString(totalTime - startTime);
         }).catch(function (error) {

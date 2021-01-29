@@ -178,13 +178,20 @@ app.post('/submitFap', cors(copts), function (req, res) {
     var startTime = 0;
     var endTime = 0;
 
+    var exists = false;
+
     for(let i = 0; i < endedFaps.length; i++){
         var tmp = endedFaps[i].split("=====");
         if(tmp[0] === user){
             startTime = tmp[1];
             endTime = tmp[2];
             endedFaps.splice(i, 1);
+            exists = true;
         }
+    }
+
+    if(!exists){
+        res.status(400).send("no ended faps available");
     }
 
     var type = req.body.type;
