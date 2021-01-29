@@ -161,7 +161,7 @@
             console.log(endTime - startTime);
 
             document.getElementById("start").innerText = timeConverter(startTime);
-            document.getElementById("dur").innerText = timeToString((endTime - startTime)*1000);
+            document.getElementById("dur").innerText = new Date((endTime - startTime) * 1000).toISOString().substr(11, 8)
         }).catch(function (error) {
             console.log(error);
         })
