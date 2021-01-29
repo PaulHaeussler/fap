@@ -159,6 +159,10 @@ app.get('/endedFap', cors(copts), function (req, res) {
 
 app.post('/discardFap', cors(copts), function (req, res) {
     logIP(req, evalCookie(req));
+    if(!evalCookie(req)){
+        res.status(401).send('not signed in');
+        return;
+    }
     for(let i = 0; i < endedFaps.length; i++){
         var user = endedFaps[i].split("=====")[0];
         if(getUserFromCookie(req.cookies['session']) === user){

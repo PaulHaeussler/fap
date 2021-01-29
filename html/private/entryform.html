@@ -30,9 +30,9 @@
                         <option value = "1">None</option>
                         <option value = "2">Pull-out game strong</option>
                         <option value = "3">Condom</option>
-                        <option value = "3">Birth Control</option>
-                        <option value = "3">Coil</option>
-                        <option value = "3">Other</option>
+                        <option value = "4">Birth Control</option>
+                        <option value = "5">Coil</option>
+                        <option value = "6">Other</option>
                     </select>
                 </p>
                 <p>
@@ -141,6 +141,7 @@
                 return response.text();
             }).then(function (text) {
                 console.log(text);
+                home();
         }).catch(function (error) {
             console.log(error);
         })
