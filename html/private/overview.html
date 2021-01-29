@@ -40,11 +40,11 @@
             if(json.length > 0) {
                 document.getElementById("nocontent").innerText = "";
             }
-
+            
+            var trh = thead.insertRow();
             Object.keys(json[0]).forEach(function(key) {
                 var th = document.createElement('th');
                 var content = document.createTextNode(key)
-                var trh = thead.insertRow();
                 th.appendChild(content)
                 trh.appendChild(th);
             })
