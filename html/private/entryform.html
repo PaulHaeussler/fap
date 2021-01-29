@@ -158,9 +158,10 @@
 
             console.log(startTime);
             console.log(endTime);
+            console.log(endTime - startTime);
 
             document.getElementById("start").innerText = timeConverter(startTime);
-            document.getElementById("dur").innerText = timeToString(endTime - startTime);
+            document.getElementById("dur").innerText = timeToString((endTime - startTime)*1000);
         }).catch(function (error) {
             console.log(error);
         })
