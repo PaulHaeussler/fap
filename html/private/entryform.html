@@ -129,13 +129,13 @@
             return response.text();
             if(response.status === 200){
                 document.getElementById("error").innerText = "Submitted fap";
-                home();
+                window.location.href = "http://fap.bilbosjournal.com";
             } else {
                 document.getElementById("error").innerText = "There was a server error";
             }
         }).then(function(text){
             console.log(text);
-            home();
+            window.location.href = "http://fap.bilbosjournal.com";
         }).catch(function (error) {
             console.log(error);
             document.getElementById("error").innerText = "There was a server error";
