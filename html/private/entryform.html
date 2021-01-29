@@ -154,13 +154,13 @@
                 return response.json();
             }).then(function (json) {
             let startTime = json.startTime;
-            let totalTime = json.totalTime;
+            let endTime = json.endTime;
 
             console.log(startTime);
-            console.log(totalTime);
+            console.log(endTime);
 
             document.getElementById("start").innerText = timeConverter(startTime);
-            document.getElementById("dur").innerText = timeToString(totalTime - startTime);
+            document.getElementById("dur").innerText = timeToString(endTime - startTime);
         }).catch(function (error) {
             console.log(error);
         })

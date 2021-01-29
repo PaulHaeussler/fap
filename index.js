@@ -137,7 +137,7 @@ app.get('/endFap', cors(copts), function (req, res){
         }
         for(let i = 0; i < ongoingFaps.length; i++){
             if(ongoingFaps[i].split("=====")[0] === user){
-                endedFaps.push(ongoingFaps[i] + "=====" + new Date().valueOf());
+                endedFaps.push(ongoingFaps[i] + "=====" + (new Date().valueOf()/1000));
                 console.log(endedFaps);
                 removeItemAll(ongoingFaps, ongoingFaps[i]);
             }
@@ -389,7 +389,7 @@ function logIP(req){
 }
 
 function setNewFap(user){
-    var timestamp = + new Date();
+    var timestamp = + (new Date()/1000);
     ongoingFaps.push(user + "=====" + timestamp);
     console.log("new fap: " + user);
 }
