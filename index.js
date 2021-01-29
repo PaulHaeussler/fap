@@ -218,7 +218,7 @@ app.post('/submitFap', cors(copts), function (req, res) {
         var params = [startTime, endTime, user, type, contra, porntype, genre, content, toys, toyname];
 
         for(let i = 0; i < params.length; i++){
-            if(params[i] === null) params[i] = " ";
+            if(params[i] === undefined) params[i] = " ";
 
         }
 
