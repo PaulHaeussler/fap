@@ -5,14 +5,15 @@ function signout(){
             return response.text();
         }).then(function (text) {
         console.log(text)
-        directHome();
+        home();
     }).catch(function (error) {
         console.log(error);
     })
 }
 
-function directHome(){
-    window.location.href = "http://fap.bilbosjournal.com";
+function home(){
+    console.log("Going home");
+    window.location.href = "/";
 }
 
 function validateEmail(email) {
