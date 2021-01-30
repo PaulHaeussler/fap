@@ -161,7 +161,7 @@ app.get('/endedFap', cors(copts), function (req, res) {
     }
 });
 
-app.post('/discardFap', cors(copts), function (req, res) {
+app.get('/discardFap', cors(copts), function (req, res) {
     logIP(req, evalCookie(req));
     if(!evalCookie(req)){
         res.status(401).send('not signed in');
