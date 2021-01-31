@@ -61,9 +61,8 @@
         console.log(error);
     })
 
-    startTime = Date.now() - elapsedTime;
     timerInterval = setInterval(function printTime() {
-        elapsedTime = Date.now() - startTime;
+        elapsedTime = Date.now()/1000 - startTime;
         document.getElementById("display").innerText = (timeToString(elapsedTime));
     }, 10);
 </script>
