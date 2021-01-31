@@ -96,17 +96,18 @@ app.get('/signout', cors(copts), function(req, res){
 app.get('/postStart', cors(copts), function (req, res){
     logIP(req, evalCookie(req));
     if(!evalCookie(req)){
-        res.status(403).send('not signed in')
+        res.status(403).send('not signed in');
         return;
     }
     let user = getUserFromCookie(req.cookies['session']);
     setNewFap(user);
+    res.status(200).send('started');
 });
 
 app.get('/hasOngoing', cors(copts), function (req, res){
     logIP(req, evalCookie(req));
     if(!evalCookie(req)){
-        res.status(401).send('not signed in')
+        res.status(401).send('not signed in');
         return;
     }
 
@@ -395,7 +396,10 @@ function logIP(req){
     var ip = req.ip;
     var path = req.originalUrl;
     var user = getUserFromCookie(req.cookies['session']);
-    console.log(ip);
+    console.log(ip + " - " + ongoingFaps + " - " + endedFaps);
+
+
+
     sql.getConnection(function(err, connection) {
         if(err) console.log(err);
         var timestamp = + new Date();
@@ -409,7 +413,7 @@ function logIP(req){
 }
 
 function setNewFap(user){
-    var timestamp = + Math.round(new Date()/1000);
+    var timestamp = Math.round(new Date()/1000);
     ongoingFaps.push(user + "=====" + timestamp);
     console.log("new fap: " + user);
 }
