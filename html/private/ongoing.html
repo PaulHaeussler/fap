@@ -62,7 +62,7 @@
     })
 
     timerInterval = setInterval(function printTime() {
-        elapsedTime = Date.now()/1000 - startTime;
+        elapsedTime = Date.now() - startTime*1000;
         document.getElementById("display").innerText = (timeToString(elapsedTime));
     }, 10);
 </script>
